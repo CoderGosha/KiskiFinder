@@ -53,7 +53,7 @@ class InstagramFinder:
             while next_max_id:
                 results = self.api.user_followers(user_id, rank_token=rank_token, max_id=next_max_id)
                 followers.extend(results.get('users', []))
-                if len(followers) >= 800:  # get only first 600 or so
+                if len(followers) >= 200:  # get only first 600 or so
                     break
                 next_max_id = results.get('next_max_id')
 
@@ -89,6 +89,7 @@ class InstagramFinder:
                <th>Kiska</th>
                <th>FullName</th>
                <th>URL</th>
+               <th>User</th>
                <th>Photo</th>
              </tr>
              <indent>
@@ -105,6 +106,8 @@ class InstagramFinder:
             table += str.format("<td>{0}</td>", account["username"])
             table += str.format("<td>{0}</td>", account["full_name"])
             table += str.format("<td><a href=http://instagram.com/{0}/>{0}</a></td>", account["username"])
+            table += """<td> <img src=""" + account["profile_pic_url"] + """ width="255" height="255" alt="lorem"> </td>"""
+
             table += "<td>"
             index = 0
             for item in account["photo"]:
