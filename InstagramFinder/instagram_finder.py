@@ -62,7 +62,7 @@ class InstagramFinder:
             followers.sort(key=lambda x: x['pk'])
             result_followers.append(followers)
 
-        logging.info("Fining split")
+        logging.info("Finding split")
         split = []
         for f_list in result_followers:
             for item in f_list:
@@ -88,9 +88,23 @@ class InstagramFinder:
                 account["photo"] = []
         return array_split
 
-    def save_to_file(self, array_split):
+    def get_filename(self, instagram_account):
+        filename = "instagram"
+        for item in instagram_account:
+            filename += "_%s" % item
+        filename += ".html"
+        return filename
+
+    def save_to_file(self, array_split, filename):
         logging.info("Save to html")
         html_str = """
+        <!DOCTYPE html>
+        <html>
+         <head>
+          <meta charset="utf-8">
+          <title>Тег META, атрибут charset</title>
+         </head>
+         <body> 
         <table border=1>
              <tr>
                <th>Kiska</th>
@@ -106,6 +120,8 @@ class InstagramFinder:
         html_end = """
              </indent>
         </table>
+         </body>
+        </html>
         """
         table = ""
         for account in array_split:
@@ -132,6 +148,9 @@ class InstagramFinder:
 
             table += "</tr>"
 
-        with open('result.html', 'w', encoding="utf-8") as file:
+        if not os.path.isdir("result_html"):
+            os.mkdir("result_html")
+
+        with open("result_html//" + filename, 'w', encoding="utf-8") as file:
             file.write(html_str + table + html_end)
         # Сохраним в HTML +
