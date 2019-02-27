@@ -53,7 +53,7 @@ class InstagramFinder:
             while next_max_id:
                 results = self.api.user_followers(user_id, rank_token=rank_token, max_id=next_max_id)
                 followers.extend(results.get('users', []))
-                if len(followers) >= 200:  # get only first 600 or so
+                if len(followers) >= 800:  # get only first 600 or so
                     break
                 next_max_id = results.get('next_max_id')
 
@@ -75,8 +75,11 @@ class InstagramFinder:
 
     def add_photo(self, array_split):
         for account in array_split:
-            media = self.api.user_feed(account["pk"])
-            account["photo"] = media["items"]
+            if not account["is_private"]:
+                media = self.api.user_feed(account["pk"])
+                account["photo"] = media["items"]
+            else:
+                account["photo"] = []
         return array_split
 
     def save_to_file(self, array_split):
