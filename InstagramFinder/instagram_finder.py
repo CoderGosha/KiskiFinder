@@ -3,7 +3,7 @@ import json
 
 from instagram_private_api import Client, ClientError, ClientLoginError, ClientLoginRequiredError, \
     ClientCookieExpiredError
-#from instagram_web_api import Client, ClientCompatPatch, ClientError, ClientLoginError, ClientCookieExpiredError
+# from instagram_web_api import Client, ClientCompatPatch, ClientError, ClientLoginError, ClientCookieExpiredError
 
 from InstagramFinder.common import onlogin_callback, from_json
 
@@ -51,9 +51,9 @@ class InstagramFinder:
 
             next_max_id = results.get('next_max_id')
             while next_max_id:
-                results = self.api.user_followers(user_id,rank_token=rank_token, max_id=next_max_id)
+                results = self.api.user_followers(user_id, rank_token=rank_token, max_id=next_max_id)
                 followers.extend(results.get('users', []))
-                if len(followers) >= 600:  # get only first 600 or so
+                if len(followers) >= 200:  # get only first 600 or so
                     break
                 next_max_id = results.get('next_max_id')
 
@@ -73,3 +73,52 @@ class InstagramFinder:
                     split.append(item)
         return split
 
+    def add_photo(self, array_split):
+        for account in array_split:
+            media = self.api.user_feed(account["pk"])
+            account["photo"] = media["items"]
+        return array_split
+
+    def save_to_file(self, array_split):
+        html_str = """
+        <table border=1>
+             <tr>
+               <th>Kiska</th>
+               <th>FullName</th>
+               <th>URL</th>
+               <th>Photo</th>
+             </tr>
+             <indent>
+        
+               """
+
+        html_end = """
+             </indent>
+        </table>
+        """
+        table = ""
+        for account in array_split:
+            table += "<tr>"
+            table += str.format("<td>{0}</td>", account["username"])
+            table += str.format("<td>{0}</td>", account["full_name"])
+            table += str.format("<td><a href=http://instagram.com/{0}/>{0}</a></td>", account["username"])
+            table += "<td>"
+            index = 0
+            for item in account["photo"]:
+                try:
+                    table += """<img src=""" + item["image_versions2"]["candidates"][0]["url"] + """ width="255" height="255" alt="lorem">"""
+                except KeyError:
+                    table += """<img src=""" + item["carousel_media"][0]["image_versions2"]["candidates"][0][
+                        "url"] + """ width="255" height="255" alt="lorem">"""
+
+                index += 1
+                if index > 4:
+                    break
+
+            table += "</td>"
+
+            table += "</tr>"
+
+        with open('result.html', 'w', encoding="utf-8") as file:
+            file.write(html_str + table + html_end)
+        # Сохраним в HTML +

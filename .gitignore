@@ -4,3 +4,6 @@
 /venv/Lib/site-packages/chardet/__pycache__/*.pyc
 /venv
 /log
+/InstagramFinder/__pycache__
+/__pycache__
+/*.html
