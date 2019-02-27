@@ -1,0 +1,6 @@
+/.idea
+/instagram_client
+/instagram_tmp
+/venv/Lib/site-packages/chardet/__pycache__/*.pyc
+/venv
+/log
