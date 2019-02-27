@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 
@@ -43,6 +44,7 @@ class InstagramFinder:
         # Выполянет поиск пересечений
         result_followers = []
         for account in instagram_account:
+            logging.info("Check %s " % account)
             rank_token = Client.generate_uuid()
             user_id = self.api.username_info(account)["user"]["pk"]
             followers = []
@@ -53,13 +55,14 @@ class InstagramFinder:
             while next_max_id:
                 results = self.api.user_followers(user_id, rank_token=rank_token, max_id=next_max_id)
                 followers.extend(results.get('users', []))
-                if len(followers) >= 200:  # get only first 600 or so
+                if len(followers) >= 10000:  # get only first 600 or so
                     break
                 next_max_id = results.get('next_max_id')
 
             followers.sort(key=lambda x: x['pk'])
             result_followers.append(followers)
 
+        logging.info("Fining split")
         split = []
         for f_list in result_followers:
             for item in f_list:
@@ -71,9 +74,12 @@ class InstagramFinder:
                         find += 1
                 if find == len(result_followers):
                     split.append(item)
+        logging.info("Find account: %i" % len(split))
+
         return split
 
     def add_photo(self, array_split):
+        logging.info("Get url for photo")
         for account in array_split:
             if not account["is_private"]:
                 media = self.api.user_feed(account["pk"])
@@ -83,6 +89,7 @@ class InstagramFinder:
         return array_split
 
     def save_to_file(self, array_split):
+        logging.info("Save to html")
         html_str = """
         <table border=1>
              <tr>
