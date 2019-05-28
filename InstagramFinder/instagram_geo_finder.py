@@ -40,7 +40,7 @@ class InstagramGeoFinder:
                 device_id=device_id,
                 on_login=lambda x: onlogin_callback(x, self.settings_file))
 
-    def find_geo(self, location_id):
+    def find_geo(self, location_id, count):
         result_photo = []
         rank_token = Client.generate_uuid()
         location_info = self.api.location_info(location_id)
@@ -60,11 +60,14 @@ class InstagramGeoFinder:
             for item in result_location["sections"]:
                 result_photo.append(item)
 
-            if len(result_photo) >= 100:  # get only first 600 or so
+            if len(result_photo) >= count:  # get only first 600 or so
                 break
-            next_max_id = result_location["next_max_id"]
+            try:
+                next_max_id = result_location["next_max_id"]
+            except KeyError:
+                break
 
-        logging.debug(len(result_location))
+        logging.info(len(result_photo))
         return result_photo
 
     def get_filename(self):
