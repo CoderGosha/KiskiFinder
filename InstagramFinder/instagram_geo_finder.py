@@ -89,10 +89,11 @@ class InstagramGeoFinder:
                  <body> 
                 <table border=1>
                      <tr>
-                       <th>Kiska</th>
+                      <th>Kiska</th>
+                      <th>FullName</th>
                        <th>Time and Description</th>
-                       <th>FullName</th>
-                       <th>URL</th>
+                       
+                      
                        <th>User</th>
                        <th>Photo</th>
                      </tr>
@@ -107,24 +108,27 @@ class InstagramGeoFinder:
                 </html>
                 """
         table = ""
-        for account in array_photo:
-            try:
-                time = int(account["layout_content"]["medias"][0]["media"]["caption"]["created_at"])
-                photo_time = datetime.datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
-                photo_time += " </br> %s" % account["layout_content"]["medias"][0]["media"]["caption"]["text"]
-            except TypeError:
-                photo_time = "-"
+        for layout in array_photo:
+            for item in layout["layout_content"]["medias"]:
+                try:
+                    time = int(item["media"]["caption"]["created_at"])
+                    photo_time = datetime.datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
+                    photo_time += " </br> %s" % item["media"]["caption"]["text"]
+                except TypeError:
+                    photo_time = "-"
 
-            table += "<tr>"
-            table += str.format("<td>{0}</td>", account["layout_content"]["medias"][0]["media"]["user"]["username"])
-            table += str.format('<td width="200" style="word-break: break-all;">{0}</td>', photo_time)
-            table += str.format("<td>{0}</td>", account["layout_content"]["medias"][0]["media"]["user"]["full_name"])
-            table += str.format("<td><a href=http://instagram.com/{0}/>{0}</a></td>", account["layout_content"]["medias"][0]["media"]["user"]["username"])
-            table += """<td> <img src=""" + account["layout_content"]["medias"][0]["media"]["user"]["profile_pic_url"] + """ width="255" height="255" alt="lorem"> </td>"""
+                table += "<tr>"
+                table += str.format("<td><a href=http://instagram.com/{0}/>{0}</a></td>",
+                                    item["media"]["user"]["username"])
+                table += str.format("<td>{0}</td>", item["media"]["user"]["full_name"])
+                table += str.format('<td width="200" style="word-break: break-all;">{0}</td>', photo_time)
 
-            table += "<td>"
-            index = 0
-            for item in account["layout_content"]["medias"]:
+
+                table += """<td> <img src=""" + item["media"]["user"]["profile_pic_url"] + """ width="255" height="255" alt="lorem"> </td>"""
+
+                table += "<td>"
+                index = 0
+
                 try:
                     table += """<img src=""" + item["media"]["image_versions2"]["candidates"][0][
                         "url"] + """ width="255" height="255" alt="lorem">"""

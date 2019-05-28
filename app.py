@@ -11,6 +11,6 @@ if __name__ == '__main__':
     instagram_account = ["farangbarspb", "farangbarspb"]
 
     worker = InstagramGeoFinder()
-    array_photo = worker.find_geo("529669000", 1000)
+    array_photo = worker.find_geo("216511113", 1000)
 
     worker.save_to_file(array_photo)
