@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 import json
@@ -89,6 +90,7 @@ class InstagramGeoFinder:
                 <table border=1>
                      <tr>
                        <th>Kiska</th>
+                       <th>Time and Description</th>
                        <th>FullName</th>
                        <th>URL</th>
                        <th>User</th>
@@ -106,8 +108,16 @@ class InstagramGeoFinder:
                 """
         table = ""
         for account in array_photo:
+            try:
+                time = int(account["layout_content"]["medias"][0]["media"]["caption"]["created_at"])
+                photo_time = datetime.datetime.utcfromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
+                photo_time += " </br> %s" % account["layout_content"]["medias"][0]["media"]["caption"]["text"]
+            except TypeError:
+                photo_time = "-"
+
             table += "<tr>"
             table += str.format("<td>{0}</td>", account["layout_content"]["medias"][0]["media"]["user"]["username"])
+            table += str.format('<td width="200" style="word-break: break-all;">{0}</td>', photo_time)
             table += str.format("<td>{0}</td>", account["layout_content"]["medias"][0]["media"]["user"]["full_name"])
             table += str.format("<td><a href=http://instagram.com/{0}/>{0}</a></td>", account["layout_content"]["medias"][0]["media"]["user"]["username"])
             table += """<td> <img src=""" + account["layout_content"]["medias"][0]["media"]["user"]["profile_pic_url"] + """ width="255" height="255" alt="lorem"> </td>"""
