@@ -55,7 +55,7 @@ class InstagramFinder:
             while next_max_id:
                 results = self.api.user_followers(user_id, rank_token=rank_token, max_id=next_max_id)
                 followers.extend(results.get('users', []))
-                if len(followers) >= 10000:  # get only first 600 or so
+                if len(followers) >= 20000:  # get only first 600 or so
                     break
                 next_max_id = results.get('next_max_id')
 
@@ -102,7 +102,7 @@ class InstagramFinder:
         <html>
          <head>
           <meta charset="utf-8">
-          <title>Тег META, атрибут charset</title>
+          <title>Kiski Finder</title>
          </head>
          <body> 
         <table border=1>
