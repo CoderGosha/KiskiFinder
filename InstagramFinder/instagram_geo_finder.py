@@ -12,15 +12,15 @@ from InstagramFinder.common import onlogin_callback, from_json
 
 class InstagramGeoFinder:
     def __init__(self):
-        username = os.environ["instagram_username"]
-        password = os.environ["instagram_password"]
+        # username = os.environ["instagram_username"]
+        # password = os.environ["instagram_password"]
         self.settings_file = "instagram_client"
 
         device_id = None
         try:
             if not os.path.isfile(self.settings_file):
-                self.api = Client(auto_patch=True, authenticate=True, username=username, password=password,
-                                  on_login=lambda x: onlogin_callback(x, self.settings_file))
+                self.api = Client(auto_patch=True, authenticate=False
+                                  )
             else:
                 with open(self.settings_file) as file_data:
                     cached_settings = json.load(file_data, object_hook=from_json)
@@ -28,8 +28,7 @@ class InstagramGeoFinder:
 
                 device_id = cached_settings.get('device_id')
                 # reuse auth settings
-                self.api = Client(
-                    username=username, password=password,
+                self.api = Client(username="ss", password="ss",
                     settings=cached_settings)
 
         except (ClientCookieExpiredError, ClientLoginRequiredError) as e:
@@ -37,7 +36,7 @@ class InstagramGeoFinder:
             # Login expired
             # Do relogin but use default ua, keys and such
             self.api = Client(
-                username=username, password=password,
+                username="ss", password="ss",
                 device_id=device_id,
                 on_login=lambda x: onlogin_callback(x, self.settings_file))
 
