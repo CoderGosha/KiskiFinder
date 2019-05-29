@@ -23,7 +23,7 @@ def initialize_logger(output_dir):
 
     # create debug file handler and set level to debug
     handler = logging.FileHandler(os.path.join(output_dir, "all.log"), "w")
-    handler.setLevel(logging.DEBUG)
+    handler.setLevel(logging.INFO)
     formatter = logging.Formatter("%(levelname)s - %(message)s")
     handler.setFormatter(formatter)
     logger.addHandler(handler)

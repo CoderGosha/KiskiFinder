@@ -150,4 +150,4 @@ class InstagramGeoFinder:
         with open("result_html//" + self.get_filename(), 'w', encoding="utf-8") as file:
             file.write(html_str + table + html_end)
         # Сохраним в HTML +
-
+        return "result_html/" + self.get_filename()
