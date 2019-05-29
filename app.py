@@ -26,7 +26,7 @@ class KiskiFiinder(Resource):
         worker = InstagramGeoFinder()
         array_photo = worker.find_geo(location_id, count)
         filename = worker.save_to_file(array_photo)
-        return {'link': 'http://localhost:5000/' + filename}
+        return {'link': 'http://kiskifinder.cg-bot.ru/' + filename}
 
     @app.route('/result_html/<path:path>')
     def send_js(path):
@@ -36,4 +36,4 @@ class KiskiFiinder(Resource):
 if __name__ == '__main__':
     initialize_logger("log")
     logging.info("Starting Kiski Finder...")
-    app.run(debug=True)
+    app.run()
